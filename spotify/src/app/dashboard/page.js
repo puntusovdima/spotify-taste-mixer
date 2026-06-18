@@ -3,8 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
-import { getUserProfile } from '@/lib/spotify';
+import { getUserProfile, generatePlaylist } from '@/lib/spotify';
 import Header from '@/components/Header';
+import ArtistWidget from '@/components/widgets/ArtistWidget';
+import TrackWidget from '@/components/widgets/TrackWidget';
+import GenreWidget from '@/components/widgets/GenreWidget';
+import DecadeWidget from '@/components/widgets/DecadeWidget';
+import MoodWidget from '@/components/widgets/MoodWidget';
+import PopularityWidget from '@/components/widgets/PopularityWidget';
+import PlaylistDisplay from '@/components/PlaylistDisplay';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -12,28 +19,135 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Widget States
+  const [selectedArtists, setSelectedArtists] = useState([]);
+  const [selectedTracks, setSelectedTracks] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedDecades, setSelectedDecades] = useState([]);
+  const [moodPrefs, setMoodPrefs] = useState({
+    enabled: false,
+    energy: 50,
+    valence: 50,
+    danceability: 50,
+    acousticness: 50
+  });
+  const [popularityPrefs, setPopularityPrefs] = useState([0, 100]);
+
+  // Playlist and Favorites States
+  const [playlist, setPlaylist] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
-    // Verificar autenticación
     if (!isAuthenticated()) {
       router.push('/');
       return;
     }
 
-    // Cargar perfil de usuario
-    const loadProfile = async () => {
+    const loadDashboardData = async () => {
       try {
-        const data = await getUserProfile();
-        setUser(data);
+        const profile = await getUserProfile();
+        setUser(profile);
+
+        // Cargar favoritos de localStorage
+        const savedFavorites = localStorage.getItem('favorite_tracks');
+        if (savedFavorites) {
+          setFavorites(JSON.parse(savedFavorites));
+        }
+
+        // Cargar preferencias anteriores si existen
+        const savedArtists = localStorage.getItem('pref_artists');
+        if (savedArtists) setSelectedArtists(JSON.parse(savedArtists));
+
+        const savedGenres = localStorage.getItem('pref_genres');
+        if (savedGenres) setSelectedGenres(JSON.parse(savedGenres));
+
       } catch (err) {
         console.error(err);
-        setError('Error al cargar perfil. Por favor inicia sesión de nuevo.');
+        setError('Error de sesión o API. Por favor inicia sesión de nuevo.');
       } finally {
         setLoading(false);
       }
     };
 
-    loadProfile();
+    loadDashboardData();
   }, [router]);
+
+  // Guardar preferencias en localStorage al cambiar
+  useEffect(() => {
+    if (selectedArtists.length > 0) {
+      localStorage.setItem('pref_artists', JSON.stringify(selectedArtists));
+    }
+  }, [selectedArtists]);
+
+  useEffect(() => {
+    if (selectedGenres.length > 0) {
+      localStorage.setItem('pref_genres', JSON.stringify(selectedGenres));
+    }
+  }, [selectedGenres]);
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const preferences = {
+        artists: selectedArtists,
+        tracks: selectedTracks,
+        genres: selectedGenres,
+        decades: selectedDecades,
+        popularity: popularityPrefs,
+        mood: moodPrefs.enabled
+          ? {
+              energy: moodPrefs.energy,
+              valence: moodPrefs.valence,
+              danceability: moodPrefs.danceability,
+              acousticness: moodPrefs.acousticness
+            }
+          : {}
+      };
+
+      const resultPlaylist = await generatePlaylist(preferences);
+      setPlaylist(resultPlaylist);
+    } catch (err) {
+      console.error(err);
+      alert('Error al generar la playlist: ' + err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRemoveTrack = (trackId) => {
+    setPlaylist(playlist.filter(t => t.id !== trackId));
+  };
+
+  const handleToggleFavorite = (track) => {
+    let updated;
+    const isFav = favorites.some(f => f.id === track.id);
+    if (isFav) {
+      updated = favorites.filter(f => f.id !== track.id);
+    } else {
+      updated = [...favorites, track];
+    }
+    setFavorites(updated);
+    localStorage.setItem('favorite_tracks', JSON.stringify(updated));
+  };
+
+  const handleAddTrack = (track) => {
+    if (playlist.some(t => t.id === track.id)) return;
+    setPlaylist([...playlist, track]);
+  };
+
+  // Marcador para la siguiente fase (Commit 15)
+  const handleSaveToSpotify = async (name) => {
+    setIsSaving(true);
+    try {
+      alert('La exportación directa a tu cuenta de Spotify se configurará en el siguiente paso de la práctica.');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -69,30 +183,55 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#09090b] text-white flex flex-col">
       <Header user={user} />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+      
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+        <div>
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Hola, {user?.display_name || 'Melómano'} 👋
           </h1>
-          <p className="mt-2 text-neutral-400">
-            Configura los widgets a continuación para mezclar tu lista de reproducción personalizada.
+          <p className="mt-2 text-neutral-400 text-sm">
+            Configura los widgets a continuación para mezclar tu lista de reproducción personalizada basada en tus gustos.
           </p>
         </div>
 
-        {/* Dashboard Grid (Sustituido en fases posteriores) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Columna 1 y 2: Contenedor de Widgets */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="p-6 bg-[#121212]/50 border border-white/[0.05] rounded-2xl min-h-[300px] flex items-center justify-center">
-              <span className="text-neutral-500">Área de Widgets</span>
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ArtistWidget onSelect={setSelectedArtists} selectedItems={selectedArtists} />
+              <TrackWidget onSelect={setSelectedTracks} selectedItems={selectedTracks} />
+              <GenreWidget onSelect={setSelectedGenres} selectedItems={selectedGenres} />
+              <DecadeWidget onSelect={setSelectedDecades} selectedItems={selectedDecades} />
+              <MoodWidget onSelect={setMoodPrefs} selectedItems={moodPrefs} />
+              <PopularityWidget onSelect={setPopularityPrefs} selectedItems={popularityPrefs} />
+            </div>
+
+            {/* Botón de Generar */}
+            <div className="w-full flex justify-end">
+              <button
+                onClick={handleGenerate}
+                disabled={isGenerating || (selectedArtists.length === 0 && selectedTracks.length === 0 && selectedGenres.length === 0 && selectedDecades.length === 0)}
+                className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#1db954] to-emerald-500 text-black font-extrabold rounded-xl transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#1db954]/10 hover:shadow-[#1db954]/20 disabled:opacity-40 disabled:scale-100 disabled:pointer-events-none cursor-pointer text-center text-sm"
+              >
+                {isGenerating ? 'Generando Playlist...' : 'Generar Playlist Mezclada ⚡'}
+              </button>
             </div>
           </div>
 
-          {/* Columna 3: Área de visualización de Playlist */}
-          <div className="space-y-8">
-            <div className="p-6 bg-[#121212]/50 border border-white/[0.05] rounded-2xl min-h-[300px] flex items-center justify-center">
-              <span className="text-neutral-500">Playlist Generada</span>
-            </div>
+          {/* Columna 3: Playlist Display */}
+          <div className="lg:col-span-1">
+            <PlaylistDisplay
+              playlist={playlist}
+              favorites={favorites}
+              onRemoveTrack={handleRemoveTrack}
+              onToggleFavorite={handleToggleFavorite}
+              onAddTrack={handleAddTrack}
+              onRefresh={handleGenerate}
+              onSaveToSpotify={handleSaveToSpotify}
+              isGenerating={isGenerating}
+              isSaving={isSaving}
+            />
           </div>
         </div>
       </main>
