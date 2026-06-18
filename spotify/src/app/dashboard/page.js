@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
-import { getUserProfile, generatePlaylist } from '@/lib/spotify';
+import { getUserProfile, generatePlaylist, createSpotifyPlaylist } from '@/lib/spotify';
 import Header from '@/components/Header';
 import ArtistWidget from '@/components/widgets/ArtistWidget';
 import TrackWidget from '@/components/widgets/TrackWidget';
@@ -137,13 +137,16 @@ export default function Dashboard() {
     setPlaylist([...playlist, track]);
   };
 
-  // Marcador para la siguiente fase (Commit 15)
   const handleSaveToSpotify = async (name) => {
+    if (!user || !user.id || playlist.length === 0) return;
     setIsSaving(true);
     try {
-      alert('La exportación directa a tu cuenta de Spotify se configurará en el siguiente paso de la práctica.');
+      const trackUris = playlist.map(t => t.uri).filter(uri => !!uri);
+      const created = await createSpotifyPlaylist(user.id, name, trackUris);
+      alert(`¡Playlist "${created.name}" creada con éxito en tu cuenta de Spotify!`);
     } catch (err) {
       console.error(err);
+      alert('Error al exportar playlist: ' + err.message);
     } finally {
       setIsSaving(false);
     }
