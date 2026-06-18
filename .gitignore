@@ -1,0 +1,17 @@
+# Study materials
+STUDY_PLAN.md
+OAUTH_FLOW.md
+SPOTIFY_API.md
+REACT_ARCHITECTURE.md
+*.zip
+
+# Local environment variables
+.env.local
+.env
+
+# Python venv
+.venv/
+**/node_modules/
+**/.next/
+**/out/
+**/build/
