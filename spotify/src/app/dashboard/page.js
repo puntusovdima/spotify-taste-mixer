@@ -283,7 +283,7 @@ export default function Dashboard() {
                   height="80"
                   frameBorder="0"
                   allowtransparency="true"
-                  allow="encrypted-media"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                   style={{ borderRadius: '12px' }}
                   title={`Reproductor Spotify para ${currentPlayingTrack.name}`}
                 ></iframe>
