@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Mic2 } from 'lucide-react';
 import { searchItems } from '@/lib/spotify';
 
 export default function ArtistWidget({ onSelect, selectedItems = [] }) {
@@ -49,7 +50,7 @@ export default function ArtistWidget({ onSelect, selectedItems = [] }) {
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🎤</span>
+          <Mic2 className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Artistas Favoritos</h2>
         </div>
         <span className="text-xs text-neutral-500 font-semibold bg-white/5 px-2.5 py-1 rounded-full">
@@ -119,8 +120,8 @@ export default function ArtistWidget({ onSelect, selectedItems = [] }) {
                       className="w-8 h-8 rounded-full object-cover border border-white/10"
                     />
                   ) : (
-                    <div className="w-8 h-8 bg-neutral-800 rounded-full flex items-center justify-center text-xs text-neutral-400">
-                      🎤
+                    <div className="w-8 h-8 bg-neutral-800 rounded-full flex items-center justify-center">
+                      <Mic2 className="w-4 h-4 text-neutral-500" />
                     </div>
                   )}
                   <span className="font-medium truncate max-w-[180px]">{artist.name}</span>

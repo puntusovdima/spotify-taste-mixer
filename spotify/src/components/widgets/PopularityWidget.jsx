@@ -1,5 +1,7 @@
 'use client';
 
+import { TrendingUp } from 'lucide-react';
+
 const CATEGORIES = [
   { label: 'Underground', min: 0, max: 49 },
   { label: 'Popular', min: 50, max: 79 },
@@ -29,7 +31,7 @@ export default function PopularityWidget({ onSelect, selectedItems = [0, 100] })
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">📊</span>
+          <TrendingUp className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Popularidad de Canciones</h2>
         </div>
         <span className="text-xs text-[#1db954] font-bold bg-[#1db954]/10 border border-[#1db954]/20 px-2.5 py-1 rounded-full">

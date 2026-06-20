@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
 import { getUserProfile, generatePlaylist, createSpotifyPlaylist } from '@/lib/spotify';
+import { Sparkles, Wand2 } from 'lucide-react';
 import Header from '@/components/Header';
 import ArtistWidget from '@/components/widgets/ArtistWidget';
 import TrackWidget from '@/components/widgets/TrackWidget';
@@ -189,8 +190,8 @@ export default function Dashboard() {
       
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Hola, {user?.display_name || 'Melómano'} 👋
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl flex items-center gap-3">
+            Hola, {user?.display_name || 'Melómano'} <Sparkles className="w-8 h-8 text-[#1db954]" />
           </h1>
           <p className="mt-2 text-neutral-400 text-sm">
             Configura los widgets a continuación para mezclar tu lista de reproducción personalizada basada en tus gustos.
@@ -215,9 +216,13 @@ export default function Dashboard() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || (selectedArtists.length === 0 && selectedTracks.length === 0 && selectedGenres.length === 0 && selectedDecades.length === 0)}
-                className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#1db954] to-emerald-500 text-black font-extrabold rounded-xl transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#1db954]/10 hover:shadow-[#1db954]/20 disabled:opacity-40 disabled:scale-100 disabled:pointer-events-none cursor-pointer text-center text-sm"
+                className="w-full md:w-auto px-8 py-4 flex items-center justify-center gap-3 bg-gradient-to-r from-[#1db954] to-emerald-500 text-black font-extrabold rounded-xl transition hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#1db954]/10 hover:shadow-[#1db954]/20 disabled:opacity-40 disabled:scale-100 disabled:pointer-events-none cursor-pointer text-center text-sm"
               >
-                {isGenerating ? 'Generando Playlist...' : 'Generar Playlist Mezclada ⚡'}
+                {isGenerating ? 'Generando Playlist...' : (
+                  <>
+                    Generar Playlist Mezclada <Wand2 className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>

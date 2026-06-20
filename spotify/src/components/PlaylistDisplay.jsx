@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { RefreshCw, Inbox, Music } from 'lucide-react';
 import TrackCard from './TrackCard';
 import { searchItems } from '@/lib/spotify';
 
@@ -85,9 +86,7 @@ export default function PlaylistDisplay({
               className="p-2 bg-neutral-900 border border-white/10 hover:bg-neutral-800 rounded-lg text-neutral-300 hover:text-white transition cursor-pointer disabled:opacity-40"
               title="Regenerar playlist"
             >
-              <svg className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3-3 3 3m-3-3v12" />
-              </svg>
+              <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
             </button>
 
             <button
@@ -121,7 +120,7 @@ export default function PlaylistDisplay({
           })
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-white/10 rounded-2xl p-6">
-            <span className="text-3xl mb-2">⚡</span>
+            <Inbox className="w-12 h-12 mb-3 text-neutral-600" strokeWidth={1} />
             <p className="text-sm font-semibold mb-1 text-neutral-300">Playlist vacía</p>
             <p className="text-xs text-neutral-500 max-w-[200px]">
               Selecciona tus preferencias musicales en los widgets de la izquierda y haz clic en "Generar Playlist".
@@ -159,7 +158,9 @@ export default function PlaylistDisplay({
                   {track.album?.images?.[2]?.url ? (
                     <img src={track.album.images[2].url} className="w-6 h-6 rounded" alt="" />
                   ) : (
-                    <div className="w-6 h-6 bg-neutral-800 flex items-center justify-center text-[10px]">🎵</div>
+                    <div className="w-6 h-6 bg-neutral-800 flex items-center justify-center">
+                      <Music className="w-3 h-3 text-neutral-500" />
+                    </div>
                   )}
                   <div className="truncate flex-1">
                     <span className="font-semibold block truncate">{track.name}</span>

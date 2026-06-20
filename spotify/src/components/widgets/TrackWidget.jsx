@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Music } from 'lucide-react';
 import { searchItems } from '@/lib/spotify';
 
 export default function TrackWidget({ onSelect, selectedItems = [] }) {
@@ -58,7 +59,7 @@ export default function TrackWidget({ onSelect, selectedItems = [] }) {
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🎵</span>
+          <Music className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Canciones Semilla</h2>
         </div>
         <span className="text-xs text-neutral-500 font-semibold bg-white/5 px-2.5 py-1 rounded-full">
@@ -129,8 +130,8 @@ export default function TrackWidget({ onSelect, selectedItems = [] }) {
                       className="w-8 h-8 rounded object-cover border border-white/10"
                     />
                   ) : (
-                    <div className="w-8 h-8 bg-neutral-800 rounded flex items-center justify-center text-xs text-neutral-400">
-                      🎵
+                    <div className="w-8 h-8 bg-neutral-800 rounded flex items-center justify-center">
+                      <Music className="w-4 h-4 text-neutral-500" />
                     </div>
                   )}
                   <div className="flex flex-col truncate">

@@ -1,5 +1,7 @@
 'use client';
 
+import { CalendarDays } from 'lucide-react';
+
 const DECADES = [
   { label: '50s (1950-1959)', value: '1950' },
   { label: '60s (1960-1969)', value: '1960' },
@@ -25,7 +27,7 @@ export default function DecadeWidget({ onSelect, selectedItems = [] }) {
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">📅</span>
+          <CalendarDays className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Era / Décadas</h2>
         </div>
         {selectedItems.length > 0 && (

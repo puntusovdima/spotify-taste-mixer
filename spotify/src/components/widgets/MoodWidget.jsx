@@ -1,5 +1,7 @@
 'use client';
 
+import { Smile, Zap, Activity, Radio, SlidersHorizontal } from 'lucide-react';
+
 const PRESETS = [
   { label: 'Happy', energy: 75, valence: 85, danceability: 80, acousticness: 10 },
   { label: 'Sad', energy: 20, valence: 15, danceability: 35, acousticness: 75 },
@@ -39,7 +41,7 @@ export default function MoodWidget({ onSelect, selectedItems = {} }) {
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🎛️</span>
+          <SlidersHorizontal className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Mood & Atmósfera</h2>
         </div>
         {/* Toggle Filtro */}
@@ -73,7 +75,7 @@ export default function MoodWidget({ onSelect, selectedItems = {} }) {
         {/* Energy */}
         <div className="flex flex-col gap-1.5">
           <div className="flex justify-between text-xs font-medium text-neutral-300">
-            <span>⚡ Energía</span>
+            <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-yellow-400" /> Energía</span>
             <span className="text-neutral-400">{energy}%</span>
           </div>
           <input
@@ -89,7 +91,7 @@ export default function MoodWidget({ onSelect, selectedItems = {} }) {
         {/* Valence */}
         <div className="flex flex-col gap-1.5">
           <div className="flex justify-between text-xs font-medium text-neutral-300">
-            <span>😊 Felicidad (Valencia)</span>
+            <span className="flex items-center gap-1.5"><Smile className="w-3.5 h-3.5 text-sky-400" /> Felicidad</span>
             <span className="text-neutral-400">{valence}%</span>
           </div>
           <input
@@ -105,7 +107,7 @@ export default function MoodWidget({ onSelect, selectedItems = {} }) {
         {/* Danceability */}
         <div className="flex flex-col gap-1.5">
           <div className="flex justify-between text-xs font-medium text-neutral-300">
-            <span>🕺 Bailabilidad</span>
+            <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-pink-400" /> Bailabilidad</span>
             <span className="text-neutral-400">{danceability}%</span>
           </div>
           <input
@@ -121,7 +123,7 @@ export default function MoodWidget({ onSelect, selectedItems = {} }) {
         {/* Acousticness */}
         <div className="flex flex-col gap-1.5">
           <div className="flex justify-between text-xs font-medium text-neutral-300">
-            <span>🎻 Acústica</span>
+            <span className="flex items-center gap-1.5"><Radio className="w-3.5 h-3.5 text-orange-400" /> Acústica</span>
             <span className="text-neutral-400">{acousticness}%</span>
           </div>
           <input

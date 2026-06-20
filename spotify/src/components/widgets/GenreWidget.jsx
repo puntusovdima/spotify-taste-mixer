@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Guitar } from 'lucide-react';
 
 const AVAILABLE_GENRES = [
   'acoustic', 'alternative', 'ambient', 'blues', 'classical',
@@ -36,7 +37,7 @@ export default function GenreWidget({ onSelect, selectedItems = [] }) {
     <div className="bg-[#121212] border border-white/[0.05] rounded-2xl p-6 transition-all hover:border-white/[0.1] shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🎸</span>
+          <Guitar className="w-5 h-5 text-[#1db954]" />
           <h2 className="text-lg font-bold">Géneros Musicales</h2>
         </div>
         <span className="text-xs text-neutral-500 font-semibold bg-white/5 px-2.5 py-1 rounded-full">
