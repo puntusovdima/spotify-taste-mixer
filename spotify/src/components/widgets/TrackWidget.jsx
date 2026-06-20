@@ -42,16 +42,7 @@ export default function TrackWidget({ onSelect, selectedItems = [] }) {
         alert('Puedes seleccionar un máximo de 5 canciones.');
         return;
       }
-      onSelect([
-        ...selectedItems,
-        {
-          id: track.id,
-          name: track.name,
-          artists: track.artists.map(a => a.name).join(', '),
-          image: track.album?.images?.[2]?.url || track.album?.images?.[0]?.url,
-          uri: track.uri
-        }
-      ]);
+      onSelect([...selectedItems, track]);
     }
   };
 
@@ -75,8 +66,8 @@ export default function TrackWidget({ onSelect, selectedItems = [] }) {
               key={track.id}
               className="flex items-center gap-1.5 bg-[#1db954]/10 border border-[#1db954]/20 text-[#1db954] text-xs px-2.5 py-1 rounded-full w-full sm:w-auto"
             >
-              {track.image && (
-                <img src={track.image} alt={track.name} className="w-4 h-4 rounded object-cover" />
+              {(track.album?.images?.[2]?.url || track.album?.images?.[0]?.url) && (
+                <img src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url} alt={track.name} className="w-4 h-4 rounded object-cover" />
               )}
               <span className="truncate max-w-[120px]">{track.name}</span>
               <button
