@@ -280,7 +280,7 @@ export default function Dashboard() {
               {showPlayHint ? (
                 <span className="text-[10px] uppercase tracking-wider font-bold text-[#1db954] animate-pulse">Cargado • Haz clic en Play en el reproductor de abajo para escuchar</span>
               ) : (
-                <span className="text-[10px] uppercase tracking-wider font-bold text-neutral-500">Vista previa</span>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-neutral-500">Reproductor Spotify</span>
               )}
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-semibold text-white truncate max-w-[180px] sm:max-w-[280px]">
