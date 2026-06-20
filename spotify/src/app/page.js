@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated, getSpotifyAuthUrl } from '@/lib/auth';
+import { Blocks, SlidersHorizontal, Zap } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
@@ -57,17 +58,17 @@ export default function Home() {
         {/* Resumen de características */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mt-24 max-w-4xl text-left">
           <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl hover:border-white/[0.1] transition-all">
-            <div className="text-[#1db954] mb-3 text-2xl">🧩</div>
+            <Blocks className="w-8 h-8 text-[#1db954] mb-3" />
             <h3 className="font-semibold text-lg mb-2">Widgets Modulares</h3>
             <p className="text-neutral-400 text-sm">Elige artistas, tracks, géneros y décadas mediante paneles dedicados.</p>
           </div>
           <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl hover:border-white/[0.1] transition-all">
-            <div className="text-purple-400 mb-3 text-2xl">🎛️</div>
+            <SlidersHorizontal className="w-8 h-8 text-purple-400 mb-3" />
             <h3 className="font-semibold text-lg mb-2">Sintonizador de Mood</h3>
             <p className="text-neutral-400 text-sm">Filtra mediante audio features como energía, valencia, danceability y acústica.</p>
           </div>
           <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl hover:border-white/[0.1] transition-all">
-            <div className="text-emerald-400 mb-3 text-2xl">⚡</div>
+            <Zap className="w-8 h-8 text-emerald-400 mb-3" />
             <h3 className="font-semibold text-lg mb-2">Exportar al Instante</h3>
             <p className="text-neutral-400 text-sm">Guarda directamente las listas mezcladas como nuevas playlists en tu cuenta de Spotify.</p>
           </div>
