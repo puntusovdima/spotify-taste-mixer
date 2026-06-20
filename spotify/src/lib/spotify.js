@@ -34,7 +34,9 @@ export async function searchItems(query, type) {
     { headers }
   );
   if (!response.ok) {
-    throw new Error(`Error al buscar ${type}`);
+    const errData = await response.json().catch(() => ({}));
+    console.error('Error de Spotify API al buscar:', response.status, errData);
+    throw new Error(`Error al buscar ${type}: [${response.status}] ${errData.error?.message || response.statusText}`);
   }
   const data = await response.json();
   return type === 'artist' ? data.artists.items : data.tracks.items;
