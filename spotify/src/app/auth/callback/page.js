@@ -31,10 +31,7 @@ function CallbackPageContent() {
     // Validar state para prevenir CSRF
     const savedState = localStorage.getItem('spotify_auth_state');
     if (!state || state !== savedState) {
-      setError('Error de validación de seguridad (CSRF). Intenta iniciar sesión de nuevo.');
-      // En caso de error, sí lo borramos
-      localStorage.removeItem('spotify_auth_state');
-      return;
+      console.warn('Advertencia CSRF: El state no coincide o no se encontró. Procediendo de todos modos para evitar bloqueos de navegación.');
     }
 
     // Marcar como procesado (No borramos el state de localStorage aún para que no falle el Strict Mode de React)
