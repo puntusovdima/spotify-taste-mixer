@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Music, PlusCircle, CheckCircle2, MinusCircle } from 'lucide-react';
+import { Play, Volume2, Music, PlusCircle, CheckCircle2, MinusCircle } from 'lucide-react';
 
 export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorite, isPlaying, onPlay }) {
   const formatDuration = (ms) => {
@@ -31,10 +31,10 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
             <button
               onClick={() => onPlay(track)}
               className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-all cursor-pointer ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-              title={isPlaying ? "Ocultar reproductor" : "Reproducir preview"}
+              title={isPlaying ? "Cargada en reproductor" : "Cargar en reproductor"}
             >
               {isPlaying ? (
-                <Pause className="w-6 h-6 text-[#1db954] drop-shadow-md animate-pulse" fill="currentColor" />
+                <Volume2 className="w-6 h-6 text-[#1db954] drop-shadow-md animate-pulse" />
               ) : (
                 <Play className="w-6 h-6 text-white drop-shadow-md hover:scale-110 transition-transform" fill="currentColor" />
               )}
