@@ -3,9 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Music, PlusCircle, CheckCircle2, MinusCircle } from 'lucide-react';
 
-export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorite }) {
-  const [showPlayer, setShowPlayer] = useState(false);
-
+export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorite, isPlaying, onPlay }) {
   const formatDuration = (ms) => {
     if (!ms) return '--:--';
     const minutes = Math.floor(ms / 60000);
@@ -22,7 +20,7 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
               <img
                 src={track.album?.images?.[2]?.url || track.album?.images?.[0]?.url}
                 alt={track.name}
-                className={`w-full h-full object-cover transition-opacity ${showPlayer ? 'opacity-50' : 'opacity-100'}`}
+                className={`w-full h-full object-cover transition-opacity ${isPlaying ? 'opacity-50' : 'opacity-100'}`}
               />
             ) : (
               <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
@@ -31,12 +29,12 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
             )}
 
             <button
-              onClick={() => setShowPlayer(!showPlayer)}
-              className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-all cursor-pointer ${showPlayer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-              title={showPlayer ? "Ocultar reproductor" : "Reproducir en Spotify"}
+              onClick={() => onPlay(track)}
+              className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-all cursor-pointer ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+              title={isPlaying ? "Ocultar reproductor" : "Reproducir preview"}
             >
-              {showPlayer ? (
-                <Pause className="w-6 h-6 text-[#1db954] drop-shadow-md" fill="currentColor" />
+              {isPlaying ? (
+                <Pause className="w-6 h-6 text-[#1db954] drop-shadow-md animate-pulse" fill="currentColor" />
               ) : (
                 <Play className="w-6 h-6 text-white drop-shadow-md hover:scale-110 transition-transform" fill="currentColor" />
               )}
@@ -44,7 +42,7 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
           </div>
 
           <div className="flex flex-col truncate">
-            <span className={`font-semibold text-sm truncate transition-colors ${showPlayer ? 'text-[#1db954]' : 'text-neutral-100 group-hover:text-white'}`}>
+            <span className={`font-semibold text-sm truncate transition-colors ${isPlaying ? 'text-[#1db954]' : 'text-neutral-100 group-hover:text-white'}`}>
               {track.name}
             </span>
             <span className="text-xs text-neutral-400 truncate mt-0.5">
@@ -83,22 +81,6 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
           </button>
         </div>
       </div>
-
-      {/* Mini Reproductor Incrustado */}
-      {showPlayer && (
-        <div className="mt-3 w-full animate-in fade-in slide-in-from-top-2 duration-300">
-          <iframe
-            src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`}
-            width="100%"
-            height="80"
-            frameBorder="0"
-            allowtransparency="true"
-            allow="encrypted-media"
-            style={{ borderRadius: '12px' }}
-            title={`Reproductor Spotify para ${track.name}`}
-          ></iframe>
-        </div>
-      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
 import { getUserProfile, generatePlaylist, createSpotifyPlaylist } from '@/lib/spotify';
-import { Sparkles, Wand2 } from 'lucide-react';
+import { Sparkles, Wand2, X, ExternalLink } from 'lucide-react';
 import Header from '@/components/Header';
 import ArtistWidget from '@/components/widgets/ArtistWidget';
 import TrackWidget from '@/components/widgets/TrackWidget';
@@ -39,6 +39,7 @@ export default function Dashboard() {
   const [favorites, setFavorites] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentPlayingTrack, setCurrentPlayingTrack] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -138,12 +139,20 @@ export default function Dashboard() {
     setPlaylist([...playlist, track]);
   };
 
+  const handlePlayTrack = (track) => {
+    if (currentPlayingTrack?.id === track.id) {
+      setCurrentPlayingTrack(null);
+    } else {
+      setCurrentPlayingTrack(track);
+    }
+  };
+
   const handleSaveToSpotify = async (name) => {
     if (!user || !user.id || playlist.length === 0) return;
     setIsSaving(true);
     try {
       const trackUris = playlist.map(t => t.uri).filter(uri => !!uri);
-      const created = await createSpotifyPlaylist(user.id, name, trackUris);
+      const created = await createSpotifyPlaylist(name, trackUris);
       alert(`¡Playlist "${created.name}" creada con éxito en tu cuenta de Spotify!`);
     } catch (err) {
       console.error(err);
@@ -239,10 +248,61 @@ export default function Dashboard() {
               onSaveToSpotify={handleSaveToSpotify}
               isGenerating={isGenerating}
               isSaving={isSaving}
+              currentPlayingTrack={currentPlayingTrack}
+              onPlayTrack={handlePlayTrack}
             />
           </div>
         </div>
       </main>
+
+      {/* Floating Bottom Player */}
+      {currentPlayingTrack && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-xl px-4 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="bg-[#181818]/95 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col gap-3 relative">
+            <button
+              onClick={() => setCurrentPlayingTrack(null)}
+              className="absolute top-3 right-3 text-neutral-400 hover:text-white transition-colors p-1 bg-white/5 hover:bg-white/10 rounded-full cursor-pointer"
+              title="Cerrar reproductor"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex flex-col gap-1 pr-8">
+              <span className="text-[10px] uppercase tracking-wider font-bold text-neutral-500">Reproduciendo vista previa</span>
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="text-xs font-semibold text-white truncate max-w-[180px] sm:max-w-[280px]">
+                  {currentPlayingTrack.name}
+                </span>
+                <span className="text-xs text-neutral-400">•</span>
+                <span className="text-xs text-neutral-400 truncate">
+                  {currentPlayingTrack.artists?.map(a => a.name).join(', ')}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="flex-1 min-h-[80px]">
+                <iframe
+                  src={`https://open.spotify.com/embed/track/${currentPlayingTrack.id}?utm_source=generator&theme=0`}
+                  width="100%"
+                  height="80"
+                  frameBorder="0"
+                  allowtransparency="true"
+                  allow="encrypted-media"
+                  style={{ borderRadius: '12px' }}
+                  title={`Reproductor Spotify para ${currentPlayingTrack.name}`}
+                ></iframe>
+              </div>
+              <a
+                href={`https://open.spotify.com/track/${currentPlayingTrack.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 text-xs font-semibold text-black bg-[#1db954] hover:bg-[#1ed760] transition-colors rounded-xl px-4 py-3 h-[50px] sm:h-auto whitespace-nowrap"
+              >
+                Abrir en Web Player <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

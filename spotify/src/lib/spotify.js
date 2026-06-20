@@ -244,11 +244,11 @@ export async function generatePlaylist(preferences) {
 }
 
 // Crear una nueva playlist en el perfil del usuario de Spotify
-export async function createSpotifyPlaylist(userId, name, trackUris) {
+export async function createSpotifyPlaylist(name, trackUris) {
   const headers = await getHeaders();
   
   // 1. Crear playlist vacía
-  const createResponse = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+  const createResponse = await fetch(`https://api.spotify.com/v1/me/playlists`, {
     method: 'POST',
     headers,
     body: JSON.stringify({

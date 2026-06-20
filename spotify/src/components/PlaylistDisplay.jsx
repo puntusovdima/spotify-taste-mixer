@@ -14,7 +14,9 @@ export default function PlaylistDisplay({
   onRefresh,
   onSaveToSpotify,
   isGenerating = false,
-  isSaving = false
+  isSaving = false,
+  currentPlayingTrack = null,
+  onPlayTrack
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -115,6 +117,8 @@ export default function PlaylistDisplay({
                 onRemove={onRemoveTrack}
                 onToggleFavorite={onToggleFavorite}
                 isFavorite={isFav}
+                isPlaying={currentPlayingTrack?.id === track.id}
+                onPlay={onPlayTrack}
               />
             );
           })
