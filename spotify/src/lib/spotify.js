@@ -30,7 +30,7 @@ export async function searchItems(query, type) {
   if (!query) return [];
   const headers = await getHeaders();
   const response = await fetch(
-    `https://api.spotify.com/v1/search?type=${type}&q=${encodeURIComponent(query)}&limit=12`,
+    `https://api.spotify.com/v1/search?type=${type}&q=${encodeURIComponent(query)}&limit=10`,
     { headers }
   );
   if (!response.ok) {
@@ -110,7 +110,7 @@ export async function generatePlaylist(preferences) {
   for (const genre of genres) {
     try {
       const response = await fetch(
-        `https://api.spotify.com/v1/search?type=track&q=genre:${encodeURIComponent(genre)}&limit=25`,
+        `https://api.spotify.com/v1/search?type=track&q=genre:${encodeURIComponent(genre)}&limit=10`,
         { headers }
       );
       if (response.ok) {
@@ -130,7 +130,7 @@ export async function generatePlaylist(preferences) {
       try {
         const qGenre = genres.length > 0 ? `genre:${genres[0]} ` : '';
         const response = await fetch(
-          `https://api.spotify.com/v1/search?type=track&q=${qGenre}year:${startYear}-${endYear}&limit=35`,
+          `https://api.spotify.com/v1/search?type=track&q=${qGenre}year:${startYear}-${endYear}&limit=10`,
           { headers }
         );
         if (response.ok) {
@@ -147,7 +147,7 @@ export async function generatePlaylist(preferences) {
   if (candidateTracks.length === 0) {
     try {
       const response = await fetch(
-        `https://api.spotify.com/v1/search?type=track&q=year:2020-2026&limit=30`,
+        `https://api.spotify.com/v1/search?type=track&q=year:2020-2026&limit=10`,
         { headers }
       );
       if (response.ok) {
