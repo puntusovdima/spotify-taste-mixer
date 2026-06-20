@@ -280,7 +280,9 @@ export async function createSpotifyPlaylist(name, trackUris) {
       });
       
       if (!addResponse.ok) {
-        throw new Error('Error al agregar canciones a la playlist');
+        const errData = await addResponse.json().catch(() => ({}));
+        console.error('Error de Spotify al añadir canciones:', addResponse.status, errData);
+        throw new Error(errData.error?.message || 'Error al agregar canciones a la playlist');
       }
     }
   }

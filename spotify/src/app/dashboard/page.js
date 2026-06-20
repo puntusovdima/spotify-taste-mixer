@@ -140,11 +140,8 @@ export default function Dashboard() {
   };
 
   const handlePlayTrack = (track) => {
-    if (currentPlayingTrack?.id === track.id) {
-      setCurrentPlayingTrack(null);
-    } else {
-      setCurrentPlayingTrack(track);
-    }
+    // Si ya es el track actual, lo mantenemos abierto (para cerrar, el usuario usa la 'X' del reproductor)
+    setCurrentPlayingTrack(track);
   };
 
   const handleSaveToSpotify = async (name) => {
