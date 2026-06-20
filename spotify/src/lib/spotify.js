@@ -159,9 +159,9 @@ export async function generatePlaylist(preferences) {
     }
   }
 
-  // Deduplicar canciones candidatas por ID
+  // Deduplicar canciones candidatas por ID y filtrar elementos nulos
   let uniqueCandidates = Array.from(
-    new Map(candidateTracks.map(track => [track.id, track])).values()
+    new Map(candidateTracks.filter(Boolean).filter(track => track && track.id).map(track => [track.id, track])).values()
   );
 
   // 5. Filtrar suavemente por Década si está seleccionado (solo si no deja la lista vacía)
