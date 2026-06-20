@@ -90,16 +90,16 @@ export async function generatePlaylist(preferences) {
     candidateTracks.push(...tracks);
   }
 
-  // 2. Obtener canciones de artistas seleccionados (Top Tracks de cada uno)
+  // 2. Obtener canciones de artistas seleccionados (Buscando tracks por nombre de artista)
   for (const artist of artists) {
     try {
       const response = await fetch(
-        `https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=US`,
+        `https://api.spotify.com/v1/search?type=track&q=artist:${encodeURIComponent(artist.name)}&limit=10`,
         { headers }
       );
       if (response.ok) {
         const data = await response.json();
-        candidateTracks.push(...(data.tracks || []));
+        candidateTracks.push(...(data.tracks?.items || []));
       }
     } catch (e) {
       console.error(`Error al obtener canciones de ${artist.name}:`, e);
