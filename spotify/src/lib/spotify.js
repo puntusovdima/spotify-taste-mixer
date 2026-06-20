@@ -94,7 +94,7 @@ export async function generatePlaylist(preferences) {
   for (const artist of artists) {
     try {
       const response = await fetch(
-        `https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=from_token`,
+        `https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=US`,
         { headers }
       );
       if (response.ok) {
