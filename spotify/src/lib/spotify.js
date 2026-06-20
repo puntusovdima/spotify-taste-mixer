@@ -273,7 +273,7 @@ export async function createSpotifyPlaylist(name, trackUris) {
     }
     
     for (const chunk of chunks) {
-      const addResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+      const addResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlist.id}/items`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ uris: chunk })
