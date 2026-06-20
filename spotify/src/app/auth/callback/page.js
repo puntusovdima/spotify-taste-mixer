@@ -32,14 +32,12 @@ function CallbackPageContent() {
     const savedState = localStorage.getItem('spotify_auth_state');
     if (!state || state !== savedState) {
       setError('Error de validación de seguridad (CSRF). Intenta iniciar sesión de nuevo.');
+      // En caso de error, sí lo borramos
       localStorage.removeItem('spotify_auth_state');
       return;
     }
 
-    // Limpiar state después de validar
-    localStorage.removeItem('spotify_auth_state');
-
-    // Marcar como procesado
+    // Marcar como procesado (No borramos el state de localStorage aún para que no falle el Strict Mode de React)
     hasProcessed.current = true;
 
     // Intercambiar código por token
