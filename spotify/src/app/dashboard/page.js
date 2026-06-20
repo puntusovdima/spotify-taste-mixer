@@ -40,6 +40,7 @@ export default function Dashboard() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentPlayingTrack, setCurrentPlayingTrack] = useState(null);
+  const [showPlayHint, setShowPlayHint] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -88,6 +89,18 @@ export default function Dashboard() {
       localStorage.setItem('pref_genres', JSON.stringify(selectedGenres));
     }
   }, [selectedGenres]);
+
+  useEffect(() => {
+    if (currentPlayingTrack) {
+      setShowPlayHint(true);
+      const timer = setTimeout(() => {
+        setShowPlayHint(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowPlayHint(false);
+    }
+  }, [currentPlayingTrack]);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -264,7 +277,11 @@ export default function Dashboard() {
               <X className="w-4 h-4" />
             </button>
             <div className="flex flex-col gap-1 pr-8">
-              <span className="text-[10px] uppercase tracking-wider font-bold text-[#1db954] animate-pulse">Cargado • Haz clic en Play en el reproductor de abajo para escuchar</span>
+              {showPlayHint ? (
+                <span className="text-[10px] uppercase tracking-wider font-bold text-[#1db954] animate-pulse">Cargado • Haz clic en Play en el reproductor de abajo para escuchar</span>
+              ) : (
+                <span className="text-[10px] uppercase tracking-wider font-bold text-neutral-500">Vista previa</span>
+              )}
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-semibold text-white truncate max-w-[180px] sm:max-w-[280px]">
                   {currentPlayingTrack.name}
