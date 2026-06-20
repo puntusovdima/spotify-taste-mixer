@@ -164,9 +164,9 @@ export async function generatePlaylist(preferences) {
     new Map(candidateTracks.map(track => [track.id, track])).values()
   );
 
-  // 5. Filtrar estrictamente por Década si está seleccionado
+  // 5. Filtrar suavemente por Década si está seleccionado (solo si no deja la lista vacía)
   if (decades.length > 0) {
-    uniqueCandidates = uniqueCandidates.filter(track => {
+    const decadeFiltered = uniqueCandidates.filter(track => {
       const releaseDate = track.album?.release_date;
       if (!releaseDate) return false;
       const year = parseInt(releaseDate.split('-')[0]);
@@ -175,13 +175,24 @@ export async function generatePlaylist(preferences) {
         return year >= start && year <= start + 9;
       });
     });
+    // Si el filtro estricto vacía la lista, nos quedamos con las canciones originales
+    if (decadeFiltered.length > 0) {
+      uniqueCandidates = decadeFiltered;
+    } else {
+      console.warn('El filtro de década habría vaciado la playlist. Ignorando filtro de década.');
+    }
   }
 
-  // 6. Filtrar por Popularidad
+  // 6. Filtrar por Popularidad (solo si no deja la lista vacía)
   const [minPop, maxPop] = popularity;
-  uniqueCandidates = uniqueCandidates.filter(
+  const popFiltered = uniqueCandidates.filter(
     track => track.popularity >= minPop && track.popularity <= maxPop
   );
+  if (popFiltered.length > 0) {
+    uniqueCandidates = popFiltered;
+  } else {
+    console.warn('El filtro de popularidad habría vaciado la playlist. Ignorando filtro.');
+  }
 
   // 7. Filtrar/Ordenar por Mood (Energy, Valence, Danceability, Acousticness) usando Audio Features
   const hasMoodFilters = 
